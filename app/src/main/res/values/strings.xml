@@ -1,0 +1,13 @@
+<resources>
+    <string name="title">Search for:</string>
+    <string name="intent_movie_tag">Movie</string>
+    <string name="spinner_title">Search for</string>
+
+    //spinner item
+    <string-array name="spinner_items">
+        <item>Rating</item>
+        <item>Popularity</item>
+    </string-array>
+
+
+</resources>
