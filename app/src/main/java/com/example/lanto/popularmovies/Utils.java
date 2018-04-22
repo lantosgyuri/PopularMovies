@@ -12,7 +12,8 @@ public class Utils {
     private static final String PREF_KEY = "searchTerm";
 
     private static final String baseUrl = "http://api.themoviedb.org/3/movie/";
-    private static final String API_KEY = "";
+    private static final String API_KEY_PLACE ="?api_key=";
+    private static final String API_KEY = "c1a1b7ead07ec4f90469511a62359911";
 
     public static void setSearchTerm(String searchTerm, Context context) {
         SharedPreferences sharedPrefs = context.getSharedPreferences(PREF_NAME, MODE_PRIVATE);
@@ -25,7 +26,7 @@ public class Utils {
         SharedPreferences sharedPref = context.getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         String searchTerm = sharedPref.getString(PREF_KEY, MainActivity.POPULAR);
 
-        return baseUrl + searchTerm + API_KEY;
+        return baseUrl + searchTerm + API_KEY_PLACE + API_KEY;
     }
 
 

@@ -24,42 +24,8 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         void onItemClick(int position);
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        mListener = listener;
-    }
-
-    public Movie getItem (int position){
-        return movieList.get(position);
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder{
-
-        ImageView mPoster;
-
-        public ViewHolder(View view){
-            super(view);
-            mPoster = view.findViewById(R.id.item_poster);
-
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mListener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            mListener.onItemClick(position);
-                        }
-                    }
-                }
-            });
-        }
-    }
-
     public MainRecycleAdapter(Context context){
         mContext = context;
-    }
-
-    public void addAll(List<Movie> movies){
-        movieList = movies;
     }
 
     @NonNull
@@ -85,6 +51,42 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
     @Override
     public int getItemCount() {
         return movieList.size();
+    }
+
+    public Movie getItem (int position){
+
+        return movieList.get(position);
+    }
+
+    public void addAll(List<Movie> movies){
+        movieList = movies;
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mListener = listener;
+    }
+
+
+    public class ViewHolder extends RecyclerView.ViewHolder{
+
+        ImageView mPoster;
+
+        public ViewHolder(View view){
+            super(view);
+            mPoster = view.findViewById(R.id.item_poster);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            mListener.onItemClick(position);
+                        }
+                    }
+                }
+            });
+        }
     }
 
 

@@ -82,22 +82,23 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         spinner.setAdapter(adapter);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (parent.getSelectedItemPosition() == 0){
-                    Utils.setSearchTerm(TOP_RATED, MainActivity.this);
-                    restartLoader();
-                } else {
-                    Utils.setSearchTerm(POPULAR, MainActivity.this);
-                    restartLoader();
+                switch (position) {
+                    case 0:
+                        Utils.setSearchTerm(TOP_RATED, MainActivity.this);
+                        break;
+                    default:
+                        Utils.setSearchTerm(POPULAR, MainActivity.this);
                 }
+                restartLoader();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
-        });
+            });
         return true;
     }
 
