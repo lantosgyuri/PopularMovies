@@ -13,7 +13,7 @@ public class Utils {
 
     private static final String baseUrl = "http://api.themoviedb.org/3/movie/";
     private static final String API_KEY_PLACE ="?api_key=";
-    private static final String API_KEY = "c1a1b7ead07ec4f90469511a62359911";
+    private static final String API_KEY = "";
 
     public static void setSearchTerm(String searchTerm, Context context) {
         SharedPreferences sharedPrefs = context.getSharedPreferences(PREF_NAME, MODE_PRIVATE);
