@@ -1,45 +1,144 @@
 package com.example.lanto.popularmovies;
 
+import android.app.LoaderManager;
 import android.content.Intent;
+import android.content.Loader;
+import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
+
 
 import com.example.lanto.popularmovies.Data.Movie;
+import com.example.lanto.popularmovies.Data.Review;
+import com.example.lanto.popularmovies.Data.Trailer;
+import com.example.lanto.popularmovies.HttpRequest.ReviewListLoader;
+import com.example.lanto.popularmovies.HttpRequest.TrailerListLoader;
+import com.example.lanto.popularmovies.RecycleViewAdapters.ReviewRecycleAdapter;
+import com.example.lanto.popularmovies.RecycleViewAdapters.TrailerRecycleAdapter;
+import com.example.lanto.popularmovies.databinding.ActivityDetailsBinding;
 import com.squareup.picasso.Picasso;
 
-public class DetailsActivity extends AppCompatActivity {
+import java.util.List;
+
+public class DetailsActivity extends AppCompatActivity implements TrailerRecycleAdapter.trailerClickListener {
 
     private Movie mMovie;
-    private TextView titleTextView;
-    private TextView plotTextView;
-    private TextView voteTextView;
-    private TextView dateTextView;
-    private ImageView posterImage;
+
+    private ActivityDetailsBinding mBinding;
+    private ReviewRecycleAdapter mReviewRecycleAdapter;
+    private TrailerRecycleAdapter mTrailerRecycleAdapter;
+    private String movieID ="";
+
+    private static final String LOG_TAG = DetailsActivity.class.getSimpleName();
+
+    private static final int TRAILER_LOADER_ID = 1;
+    private static final int REVIEW_LOADER_ID = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_details);
-
-        titleTextView =findViewById(R.id.detail_title);
-        plotTextView =findViewById(R.id.detail_plot);
-        voteTextView =findViewById(R.id.detail_vote);
-        dateTextView =findViewById(R.id.detail_release_datum);
-        posterImage = findViewById(R.id.detail_poster);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_details);
 
         Intent intent = getIntent();
 
         if (intent != null) {
             mMovie = intent.getExtras().getParcelable(getString(R.string.intent_movie_tag));
-            titleTextView.setText(mMovie.getmTitle());
-            plotTextView.setText(mMovie.getmPlot());
-            voteTextView.setText(mMovie.getmVoteAvarage());
-            dateTextView.setText(mMovie.getmReleaseDate());
+            mBinding.detailTitle.setText(mMovie.getmTitle());
+            mBinding.detailPlot.setText(mMovie.getmPlot());
+            mBinding.detailVote.setText(mMovie.getmVoteAvarage());
+            mBinding.detailReleaseDatum.setText(mMovie.getmReleaseDate());
             Picasso.with(this)
                     .load(mMovie.getmPosterUrl())
-                    .into(posterImage);
+                    .into(mBinding.detailPoster);
+
+            movieID = mMovie.getmId();
+            Log.e(LOG_TAG, " 1" + movieID);
+
+            getLoaderManager().initLoader(TRAILER_LOADER_ID, null, trailerListLoader);
+            Log.e(LOG_TAG, "initloader lefutott");
+            getLoaderManager().initLoader(REVIEW_LOADER_ID, null, reviewListLoader);
+            Log.e(LOG_TAG, "initloader lefutott");
         }
+
+
+        mBinding.reviewsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mReviewRecycleAdapter = new ReviewRecycleAdapter();
+        mBinding.reviewsRecyclerView.setAdapter(mReviewRecycleAdapter);
+
+        mBinding.trailerRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+        mTrailerRecycleAdapter = new TrailerRecycleAdapter();
+        mBinding.trailerRecyclerView.setAdapter(mTrailerRecycleAdapter);
+        mTrailerRecycleAdapter.setTrailerClickListener(this);
+
+
     }
+
+    @Override
+    public void onItemClick(int position) {
+        Trailer currentTrailer = mTrailerRecycleAdapter.getItem(position);
+        String url = currentTrailer.getmTrailerUrl();
+
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(intent);
+    }
+
+    @Override
+    public void onLongClick(int position) {
+        Trailer currentTrailer = mTrailerRecycleAdapter.getItem(position);
+        String url = currentTrailer.getmTrailerUrl();
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, url);
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
+
+    }
+
+    private LoaderManager.LoaderCallbacks<List<Trailer>> trailerListLoader =
+            new LoaderManager.LoaderCallbacks<List<Trailer>>() {
+                @Override
+                public Loader<List<Trailer>> onCreateLoader(int id, Bundle args) {
+
+                    Log.e(LOG_TAG, Utils.makeTrailerUrl(movieID));
+
+                    return new TrailerListLoader(DetailsActivity.this, Utils.makeTrailerUrl(movieID));
+                }
+
+                @Override
+                public void onLoadFinished(Loader<List<Trailer>> loader, List<Trailer> data) {
+                    mTrailerRecycleAdapter.addAll(data);
+                    mTrailerRecycleAdapter.notifyDataSetChanged();
+                }
+
+
+                @Override
+                public void onLoaderReset(Loader<List<Trailer>> loader) {
+
+                }
+            };
+
+    private LoaderManager.LoaderCallbacks<List<Review>> reviewListLoader =
+            new LoaderManager.LoaderCallbacks<List<Review>>() {
+                @Override
+                public Loader<List<Review>> onCreateLoader(int id, Bundle args) {
+                    return new ReviewListLoader(DetailsActivity.this, Utils.makeReviewUrl(movieID));
+                }
+
+                @Override
+                public void onLoadFinished(Loader<List<Review>> loader, List<Review> data) {
+                    Log.e(LOG_TAG, "megkapja a Listet");
+                    mReviewRecycleAdapter.addAll(data);
+                    mReviewRecycleAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onLoaderReset(Loader<List<Review>> loader) {
+
+                }
+            };
+
+
 }

@@ -2,6 +2,9 @@
     <string name="title">Search for:</string>
     <string name="intent_movie_tag">Movie</string>
     <string name="spinner_title">Search for</string>
+    <string name="trailers">Trailers</string>
+    <string name="reviews">Reviews</string>
+    <string name="share">Share</string>
 
     //spinner item
     <string-array name="spinner_items">

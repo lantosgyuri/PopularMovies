@@ -1,4 +1,4 @@
-package com.example.lanto.popularmovies;
+package com.example.lanto.popularmovies.RecycleViewAdapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.lanto.popularmovies.Data.Movie;
+import com.example.lanto.popularmovies.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.Collections;

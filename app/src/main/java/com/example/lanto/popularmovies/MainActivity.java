@@ -18,7 +18,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.example.lanto.popularmovies.Data.Movie;
-import com.example.lanto.popularmovies.HttpRequest.DataLoader;
+import com.example.lanto.popularmovies.HttpRequest.MovieListLoader;
+import com.example.lanto.popularmovies.RecycleViewAdapters.MainRecycleAdapter;
 
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public Loader<List<Movie>> onCreateLoader(int id, Bundle args) {
-        return new DataLoader(this, Utils.makeSearchUrl(this));
+        return new MovieListLoader(this, Utils.makeSearchUrl(this));
     }
 
     @Override
