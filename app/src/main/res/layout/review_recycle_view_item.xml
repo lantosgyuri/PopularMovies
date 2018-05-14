@@ -4,10 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="50dp">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:background="@color/detailsBgColor">
 
     <TextView
         android:id="@+id/review_recycle_author_text_view"
+        android:textStyle="bold"
+        android:textColor="@color/detailsTextColor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
@@ -18,9 +22,10 @@
 
     <TextView
         android:id="@+id/review_recycle_content_text_view"
+        android:textColor="@color/detailsTextColor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginLeft="10dp"
         tools:text="CONTENT CONTENT CONTENT "
         android:gravity="left

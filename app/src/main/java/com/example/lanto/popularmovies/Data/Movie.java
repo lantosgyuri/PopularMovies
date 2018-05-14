@@ -12,6 +12,7 @@ public class Movie implements Parcelable{
     private String mPlot;
     private String mId;
 
+    //base constructor
     public Movie(String title, String releaseDate, String posterUrl, String voteAvarage, String plot, String Id) {
         mTitle = title;
         mReleaseDate = releaseDate;
@@ -20,6 +21,15 @@ public class Movie implements Parcelable{
         mPlot = plot;
         mId = Id;
 
+    }
+
+    //second constructor for the SQLite
+    public Movie(String title, String releaseDate, String posterUrl, String voteAverage, String plot){
+        mTitle = title;
+        mReleaseDate = releaseDate;
+        mPosterUrl = posterUrl;
+        mVoteAvarage = voteAverage;
+        mPlot = plot;
     }
 
     protected Movie(Parcel in) {

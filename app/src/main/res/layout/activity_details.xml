@@ -1,88 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".DetailsActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ScrollView android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/detailsBgColor">
 
-    <TextView
-        android:id="@+id/detail_title"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:textSize="20sp"
-        tools:text="TEXT TEXT"/>
-
-    <ImageView
-        android:id="@+id/detail_poster"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleType="center"
-        />
-
-
-    <TextView
-        android:id="@+id/detail_plot"
-        android:layout_margin="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="TEXT TEXT"/>
-
-    <TextView
-        android:id="@+id/detail_vote"
-        android:layout_marginStart="10dp"
-        android:padding="5dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15sp"
-        android:textColor="@android:color/white"
-        android:background="@android:color/background_dark"
-        tools:text="TEXT TEXT"/>
-
-    <TextView
-        android:id="@+id/detail_release_datum"
-        android:layout_margin="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="TEXT TEXT"/>
-
-        <TextView
-            android:layout_margin="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/trailers"/>
-
-        <android.support.v7.widget.RecyclerView
-            android:layout_margin="10dp"
-            android:id="@+id/trailer_recyclerView"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"/>
+            android:layout_height="match_parent">
 
-        <TextView
-            android:layout_margin="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/reviews"/>
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="36dp"
+                android:text="@string/reviews"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/detailsTextColor"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/trailer_recycleView" />
 
-        <android.support.v7.widget.RecyclerView
-            android:layout_margin="10dp"
-            android:id="@+id/reviews_recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"/>
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="24dp"
+                android:text="@string/trailers"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/detailsTextColor"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/detail_plot" />
 
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="124dp"
+                android:text="@string/summary"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/detailsTextColor"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/detail_poster" />
 
+            <ImageView
+                android:id="@+id/detail_poster"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@mipmap/ic_launcher" />
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/detail_title"
+                android:textColor="@color/detailsTextColor"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="20dp"
+                tools:text="TITLE TITLE"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/detail_poster" />
 
-</ScrollView>
+            <TextView
+                android:id="@+id/textView4"
+                android:textColor="@color/detailsTextColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="40dp"
+                android:text="@string/release_date"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/detail_title" />
+
+            <TextView
+                android:id="@+id/detail_release_datum"
+                android:textColor="@color/detailsTextColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="60dp"
+                tools:text="rDate"
+                app:layout_constraintStart_toEndOf="@+id/textView4"
+                app:layout_constraintTop_toBottomOf="@+id/detail_poster" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:textColor="@color/detailsTextColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:text="@string/rating"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+            <TextView
+                android:id="@+id/detail_vote"
+                android:textColor="@color/detailsTextColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                tools:text="rRating"
+                app:layout_constraintStart_toEndOf="@+id/textView6"
+                app:layout_constraintTop_toBottomOf="@+id/detail_release_datum" />
+
+            <TextView
+                android:id="@+id/detail_plot"
+                android:textColor="@color/detailsTextColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="32dp"
+                tools:text="PLotplotplotplot"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/textView8" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/trailer_recycleView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/reviews_recyclerView"
+                android:layout_width="369dp"
+                android:layout_height="200dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_marginEnd="24dp"
+                android:src="@drawable/ic_favorite"
+                app:fab_colorNormal="#FFFF00"
+                app:fab_showShadow="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/trailer_recycleView" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </ScrollView>
 </layout>

@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
+import android.view.View;
 
 
 import com.example.lanto.popularmovies.Data.Movie;
@@ -18,6 +19,7 @@ import com.example.lanto.popularmovies.HttpRequest.ReviewListLoader;
 import com.example.lanto.popularmovies.HttpRequest.TrailerListLoader;
 import com.example.lanto.popularmovies.RecycleViewAdapters.ReviewRecycleAdapter;
 import com.example.lanto.popularmovies.RecycleViewAdapters.TrailerRecycleAdapter;
+import com.example.lanto.popularmovies.Services.SaveMovieService;
 import com.example.lanto.popularmovies.databinding.ActivityDetailsBinding;
 import com.squareup.picasso.Picasso;
 
@@ -55,12 +57,9 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                     .into(mBinding.detailPoster);
 
             movieID = mMovie.getmId();
-            Log.e(LOG_TAG, " 1" + movieID);
 
             getLoaderManager().initLoader(TRAILER_LOADER_ID, null, trailerListLoader);
-            Log.e(LOG_TAG, "initloader lefutott");
             getLoaderManager().initLoader(REVIEW_LOADER_ID, null, reviewListLoader);
-            Log.e(LOG_TAG, "initloader lefutott");
         }
 
 
@@ -68,14 +67,26 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         mReviewRecycleAdapter = new ReviewRecycleAdapter();
         mBinding.reviewsRecyclerView.setAdapter(mReviewRecycleAdapter);
 
-        mBinding.trailerRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+        mBinding.trailerRecycleView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mTrailerRecycleAdapter = new TrailerRecycleAdapter();
-        mBinding.trailerRecyclerView.setAdapter(mTrailerRecycleAdapter);
+        mBinding.trailerRecycleView.setAdapter(mTrailerRecycleAdapter);
         mTrailerRecycleAdapter.setTrailerClickListener(this);
+
+        mBinding.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentToSaveMovie = new Intent(DetailsActivity.this, SaveMovieService.class);
+                intentToSaveMovie.putExtra("Movie", mMovie );
+                startService(intentToSaveMovie);
+            }
+        });
 
 
     }
 
+
+
+    //open link with youtube or browser
     @Override
     public void onItemClick(int position) {
         Trailer currentTrailer = mTrailerRecycleAdapter.getItem(position);
@@ -85,6 +96,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         startActivity(intent);
     }
 
+    //share Trailer link
     @Override
     public void onLongClick(int position) {
         Trailer currentTrailer = mTrailerRecycleAdapter.getItem(position);
@@ -101,9 +113,6 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
             new LoaderManager.LoaderCallbacks<List<Trailer>>() {
                 @Override
                 public Loader<List<Trailer>> onCreateLoader(int id, Bundle args) {
-
-                    Log.e(LOG_TAG, Utils.makeTrailerUrl(movieID));
-
                     return new TrailerListLoader(DetailsActivity.this, Utils.makeTrailerUrl(movieID));
                 }
 
@@ -129,7 +138,6 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
 
                 @Override
                 public void onLoadFinished(Loader<List<Review>> loader, List<Review> data) {
-                    Log.e(LOG_TAG, "megkapja a Listet");
                     mReviewRecycleAdapter.addAll(data);
                     mReviewRecycleAdapter.notifyDataSetChanged();
                 }
