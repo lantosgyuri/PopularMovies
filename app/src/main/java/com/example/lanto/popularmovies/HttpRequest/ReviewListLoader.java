@@ -3,14 +3,13 @@ package com.example.lanto.popularmovies.HttpRequest;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 
-import com.example.lanto.popularmovies.Data.Movie;
 import com.example.lanto.popularmovies.Data.Review;
 
 import java.util.List;
 
 public class ReviewListLoader extends AsyncTaskLoader<List<Review>> {
 
-    private String mUrl;
+    private final String mUrl;
 
     public ReviewListLoader(Context context, String url) {
         super(context);

@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.View;
 
 
@@ -33,6 +32,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     private ReviewRecycleAdapter mReviewRecycleAdapter;
     private TrailerRecycleAdapter mTrailerRecycleAdapter;
     private String movieID ="";
+    public final static String MOVIE_INTENT_KEY = "Movie";
 
     private static final String LOG_TAG = DetailsActivity.class.getSimpleName();
 
@@ -46,6 +46,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
 
         Intent intent = getIntent();
 
+        //set text with movie details
         if (intent != null) {
             mMovie = intent.getExtras().getParcelable(getString(R.string.intent_movie_tag));
             mBinding.detailTitle.setText(mMovie.getmTitle());
@@ -62,12 +63,21 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
             getLoaderManager().initLoader(REVIEW_LOADER_ID, null, reviewListLoader);
         }
 
+        setReviewRecycleView();
+        setTrailerRecycleView();
 
+    }
+
+    private void setReviewRecycleView(){
         mBinding.reviewsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mBinding.reviewsRecyclerView.setHasFixedSize(true);
         mReviewRecycleAdapter = new ReviewRecycleAdapter();
         mBinding.reviewsRecyclerView.setAdapter(mReviewRecycleAdapter);
+    }
 
+    private void setTrailerRecycleView() {
         mBinding.trailerRecycleView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        mBinding.trailerRecycleView.setHasFixedSize(true);
         mTrailerRecycleAdapter = new TrailerRecycleAdapter();
         mBinding.trailerRecycleView.setAdapter(mTrailerRecycleAdapter);
         mTrailerRecycleAdapter.setTrailerClickListener(this);
@@ -76,14 +86,11 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
             @Override
             public void onClick(View v) {
                 Intent intentToSaveMovie = new Intent(DetailsActivity.this, SaveMovieService.class);
-                intentToSaveMovie.putExtra("Movie", mMovie );
+                intentToSaveMovie.putExtra(MOVIE_INTENT_KEY, mMovie );
                 startService(intentToSaveMovie);
             }
         });
-
-
     }
-
 
 
     //open link with youtube or browser
@@ -109,7 +116,8 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
 
     }
 
-    private LoaderManager.LoaderCallbacks<List<Trailer>> trailerListLoader =
+    //loaderManager to get trailers
+    private final LoaderManager.LoaderCallbacks<List<Trailer>> trailerListLoader =
             new LoaderManager.LoaderCallbacks<List<Trailer>>() {
                 @Override
                 public Loader<List<Trailer>> onCreateLoader(int id, Bundle args) {
@@ -118,6 +126,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
 
                 @Override
                 public void onLoadFinished(Loader<List<Trailer>> loader, List<Trailer> data) {
+                    if (data.size() == 0) mBinding.trailerRecycleEmptyView.setVisibility(View.VISIBLE);
                     mTrailerRecycleAdapter.addAll(data);
                     mTrailerRecycleAdapter.notifyDataSetChanged();
                 }
@@ -129,7 +138,8 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                 }
             };
 
-    private LoaderManager.LoaderCallbacks<List<Review>> reviewListLoader =
+    //loaderManager to get reviews
+    private final LoaderManager.LoaderCallbacks<List<Review>> reviewListLoader =
             new LoaderManager.LoaderCallbacks<List<Review>>() {
                 @Override
                 public Loader<List<Review>> onCreateLoader(int id, Bundle args) {
@@ -138,6 +148,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
 
                 @Override
                 public void onLoadFinished(Loader<List<Review>> loader, List<Review> data) {
+                    if(data.size() == 0)mBinding.reviewRecycleEmptyView.setVisibility(View.VISIBLE);
                     mReviewRecycleAdapter.addAll(data);
                     mReviewRecycleAdapter.notifyDataSetChanged();
                 }

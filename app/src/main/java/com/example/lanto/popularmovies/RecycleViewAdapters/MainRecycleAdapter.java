@@ -18,7 +18,7 @@ import java.util.List;
 public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.ViewHolder> {
 
     private List<Movie> movieList = Collections.emptyList();
-    private Context mContext;
+    private final Context mContext;
     private OnItemClickListener mListener;
 
     public interface OnItemClickListener {
@@ -70,9 +70,9 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        ImageView mPoster;
+        final ImageView mPoster;
 
-        public ViewHolder(View view){
+        ViewHolder(View view){
             super(view);
             mPoster = view.findViewById(R.id.item_poster);
 

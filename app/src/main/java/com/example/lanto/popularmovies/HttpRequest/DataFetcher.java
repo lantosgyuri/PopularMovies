@@ -20,7 +20,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataFetcher {
+class DataFetcher {
 
     private static final String LOG_TAG = DataFetcher.class.getSimpleName();
     // constants for the JSON parsing

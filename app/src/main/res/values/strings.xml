@@ -1,19 +1,30 @@
 <resources>
-    <string name="title">Search for:</string>
     <string name="intent_movie_tag">Movie</string>
     <string name="spinner_title">Search for</string>
     <string name="trailers">Trailers</string>
     <string name="reviews">Reviews</string>
-    <string name="share">Share</string>
     <string name="release_date">Release date:</string>
     <string name="rating">Rating:</string>
     <string name="summary">Summary</string>
+    <string name="notification_chanel_desc">Movies Channel</string>
+    <string name="notification_titel">Watch movies</string>
+    <string name="notification_content">Click here to get Movie Ideas to watch!!!</string>
+    <string name="no_internet_connection_warning">THEE IS NO AVAILABLE INTERNET CONNECTION. Please try again later, or check your saved movies.</string>
+    <string name="trailer_recycle_empty_view">There is no available trailer</string>
+    <string name="review_recycle_empty_view">There is no available review</string>
 
-    //spinner item
-    <string-array name="spinner_items">
-        <item>Rating</item>
-        <item>Popularity</item>
-    </string-array>
+    //array strings for settings
+    <string name="pref_label_top_rated">Top rated</string>
+    <string name="pref_label_popular">Popular</string>
+    <string name="pref_label_favorite">Favorite</string>
 
+    <string name="pref_value_top_rated">top_rated</string>
+    <string name="pref_value_popular">popular</string>
+    <string name="pref_value_favorite">favorite</string>
+
+    //settings list preference label
+    <string name="pef_list_label">Movies to load</string>
+    //list preference key
+    <string name="pref_list_key">movieToLoad</string>
 
 </resources>

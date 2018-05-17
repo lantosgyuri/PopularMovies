@@ -64,9 +64,9 @@ public class TrailerRecycleAdapter extends RecyclerView.Adapter<TrailerRecycleAd
     //View Holder
     public class TrailerViewHodler extends RecyclerView.ViewHolder{
 
-        TextView mTrailerName;
+        final TextView mTrailerName;
 
-        public TrailerViewHodler(View itemView) {
+        TrailerViewHodler(View itemView) {
             super(itemView);
             mTrailerName = itemView.findViewById(R.id.trailer_recycle_name_text_view);
 

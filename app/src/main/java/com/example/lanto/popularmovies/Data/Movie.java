@@ -5,11 +5,11 @@ import android.os.Parcelable;
 
 public class Movie implements Parcelable{
 
-    private String mTitle;
-    private String mReleaseDate;
-    private String mPosterUrl;
-    private String mVoteAvarage;
-    private String mPlot;
+    private final String mTitle;
+    private final String mReleaseDate;
+    private final String mPosterUrl;
+    private final String mVoteAvarage;
+    private final String mPlot;
     private String mId;
 
     //base constructor
@@ -32,7 +32,7 @@ public class Movie implements Parcelable{
         mPlot = plot;
     }
 
-    protected Movie(Parcel in) {
+    private Movie(Parcel in) {
         mTitle = in.readString();
         mReleaseDate = in.readString();
         mPosterUrl = in.readString();
