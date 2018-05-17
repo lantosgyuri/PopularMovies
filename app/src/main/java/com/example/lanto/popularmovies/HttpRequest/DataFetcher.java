@@ -130,7 +130,6 @@ class DataFetcher {
                 String key = currentItem.getString(KEY);
 
                 Trailer trailer = new Trailer(name, key);
-                Log.e(LOG_TAG, ""+ trailer.getmTrailerName());
                 trailerList.add(trailer);
             }
 

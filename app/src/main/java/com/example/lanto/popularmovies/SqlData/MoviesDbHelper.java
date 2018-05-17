@@ -10,7 +10,7 @@ import com.example.lanto.popularmovies.SqlData.MoviesContract.MoviesEntry;
 class MoviesDbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "movies.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public MoviesDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -22,6 +22,7 @@ class MoviesDbHelper extends SQLiteOpenHelper {
         String SQL_CREATE_MOVIES_TABLE = "CREATE TABLE "
                 + MoviesEntry.TABLE_NAME + " ("
                 + MoviesEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + MoviesEntry.COLUMN_MOVIE_ID + " TEXT NOT NULL, "
                 + MoviesEntry.COLUMN_TITEL + " TEXT NOT NULL, "
                 + MoviesEntry.COLUMN_POSTER_URL + " TEXT, "
                 + MoviesEntry.COLUMN_PLOT + " TEXT NOT NULL, "

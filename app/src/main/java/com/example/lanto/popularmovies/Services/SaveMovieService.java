@@ -29,6 +29,7 @@ public class SaveMovieService extends IntentService {
 
             ContentValues values = new ContentValues();
             values.put(MoviesEntry.COLUMN_TITEL, mMovie.getmTitle());
+            values.put(MoviesEntry.COLUMN_MOVIE_ID, mMovie.getmId());
             values.put(MoviesEntry.COLUMN_POSTER_URL, mMovie.getmPosterUrl());
             values.put(MoviesEntry.COLUMN_PLOT, mMovie.getmPlot());
             values.put(MoviesEntry.COLUMN_RELEASE_DATE, mMovie.getmReleaseDate());

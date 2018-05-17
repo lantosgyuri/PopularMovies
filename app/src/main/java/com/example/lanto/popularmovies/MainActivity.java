@@ -27,8 +27,10 @@ import com.example.lanto.popularmovies.SqlData.MoviesContract.MoviesEntry;
 
 import java.util.List;
 
+import static com.example.lanto.popularmovies.R.string.pref_value_favorite;
+
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Movie>>,
-        MainRecycleAdapter.OnItemClickListener{
+        MainRecycleAdapter.OnItemClickListener, FavoriteMovieAdapter.OnItemClickListenerCursor{
 
     private static final int LOADER_ID = 1;
     private static final int CURSOR_LOADER_ID = 2;
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private MainRecycleAdapter mAdapter;
     private RecyclerView recyclerView;
     private TextView emptyView;
+    private TextView emptyViewCursor;
 
     private FavoriteMovieAdapter favoriteMovieAdapter;
 
@@ -45,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setTitle("Selected Movies: " + Utils.getPrefCategory(this));
+        setTitle(Utils.setMainActivityTitle(this));
 
         //set recycleView
         setRecyclerView();
@@ -63,9 +66,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private void setRecyclerView(){
         /*
         emptyView in case if there is no internet connection
-        and there is no data to load into recycleView
+        and there is no data to load into recycleView, or cursor is empty
          */
         emptyView = findViewById(R.id.main_activity_empty_view);
+        emptyViewCursor = findViewById(R.id.main_activity_empty_view_cursor);
 
         recyclerView = findViewById(R.id.main_activity_recycle_view);
         int numberOfColumns = 2;
@@ -73,10 +77,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         recyclerView.setHasFixedSize(true);
 
         mAdapter = new MainRecycleAdapter(this);
-        favoriteMovieAdapter = new FavoriteMovieAdapter(this);
         mAdapter.setOnItemClickListener(this);
-    }
+        favoriteMovieAdapter = new FavoriteMovieAdapter(this);
+        favoriteMovieAdapter.setOnClickListener(this);
 
+    }
 
     //loader to load the Movies
     @Override
@@ -127,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private void loadDataToRecycleView(){
         String prefCategory = Utils.getPrefCategory(this);
 
-        if (prefCategory.equals(getString(R.string.pref_value_favorite))) {
+        if (prefCategory.equals(getString(pref_value_favorite))) {
                 getLoaderManager().initLoader(CURSOR_LOADER_ID, null, cursorLoader);
         }
 
@@ -150,25 +155,43 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         startActivity(intent);
     }
 
-    private LoaderManager.LoaderCallbacks<Cursor> cursorLoader = new LoaderManager.LoaderCallbacks<Cursor>() {
+    // make new movie object to pass to the main activity
+    @Override
+    public void onItemClickCursor(String title, String posterUrl, String plot,
+                                  String avarage, String id, String releaseDate, int sqlId) {
+        Movie favoriteMovie = new Movie(true, title, releaseDate, posterUrl, avarage, plot, id, sqlId );
+
+        Intent intent = new Intent(this, DetailsActivity.class);
+        intent.putExtra(getString(R.string.intent_movie_tag), favoriteMovie);
+        startActivity(intent);
+    }
+
+    private final LoaderManager.LoaderCallbacks<Cursor> cursorLoader = new LoaderManager.LoaderCallbacks<Cursor>() {
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
             String[] projection = {
                     MoviesEntry._ID,
+                    MoviesEntry.COLUMN_MOVIE_ID,
                     MoviesEntry.COLUMN_TITEL,
                     MoviesEntry.COLUMN_POSTER_URL,
                     MoviesEntry.COLUMN_RELEASE_DATE,
                     MoviesEntry.COLUMN_VOTE_AVERAGE,
                     MoviesEntry.COLUMN_PLOT};
+
+            String sortOrder = MoviesEntry.COLUMN_MOVIE_ID + " ASC";
             return new CursorLoader(MainActivity.this,
                     MoviesContract.MOVIES_URI,
                     projection,
-                    null, null, null);
+                    null, null, sortOrder);
         }
 
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
             Log.e("Main cursor", String.valueOf(data.getCount()));
+            if(data == null){
+                recyclerView.setVisibility(View.INVISIBLE);
+                emptyViewCursor.setVisibility(View.VISIBLE);
+            }
             favoriteMovieAdapter.addAll(data);
             favoriteMovieAdapter.notifyDataSetChanged();
             recyclerView.setAdapter(favoriteMovieAdapter);

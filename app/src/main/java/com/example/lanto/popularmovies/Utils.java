@@ -10,8 +10,6 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
-import android.support.v7.preference.ListPreference;
-import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 
@@ -25,17 +23,17 @@ import com.firebase.jobdispatcher.Trigger;
 
 import java.util.concurrent.TimeUnit;
 
-import static android.content.Context.MODE_PRIVATE;
+import static com.example.lanto.popularmovies.R.*;
 
 public class Utils {
 
     //networking
     private static final String baseUrl = "http://api.themoviedb.org/3/movie/";
     private static final String API_KEY_PLACE ="?api_key=";
-    private static final String API_KEY = "c1a1b7ead07ec4f90469511a62359911";
+    private static final String API_KEY = ;
     private static final String VIDEOS = "/videos";
     private static final String REVIEWS = "/reviews";
-    public static final String POPULAR = "popular";
+    private static final String POPULAR = "popular";
 
     //notification
     private static final String CHANNEL_1_ID = "Movies Channel";
@@ -48,9 +46,24 @@ public class Utils {
     //get saved movie category
     public static String getPrefCategory(Context context){
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        String prefCategory = sharedPref.getString(context.getString(R.string.pref_list_key), POPULAR);
+        String prefCategory = sharedPref.getString(context.getString(string.pref_list_key), POPULAR);
         return prefCategory;
     }
+
+    //set MainActivity title
+    public static String setMainActivityTitle(Context context){
+        String prefCategory = getPrefCategory(context);
+        String title = "";
+        if (prefCategory.equals(context.getString(string.pref_value_favorite))) {
+            title = context.getString(string.pref_label_favorite);
+        }
+        else if (prefCategory.equals(context.getString(string.pref_value_popular))) {
+            title = context.getString((string.pref_label_popular));
+        } else title = context.getString(string.pref_label_top_rated);
+
+        return title;
+    }
+
 
     //make URLS
     public static String makeSearchUrl(Context context) {
@@ -71,7 +84,7 @@ public class Utils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel1 = new NotificationChannel(
                     CHANNEL_1_ID,
-                    Resources.getSystem().getString(R.string.notification_chanel_desc),
+                    Resources.getSystem().getString(string.notification_chanel_desc),
             NotificationManager.IMPORTANCE_HIGH);
             channel1.setDescription("This is Channel 1");
 
@@ -88,9 +101,9 @@ public class Utils {
                 0, activityIntent, 0);
 
         Notification notification = new NotificationCompat.Builder(context, CHANNEL_1_ID)
-                .setSmallIcon(R.drawable.ic_favorite_border)
-                .setContentTitle(context.getString(R.string.notification_titel))
-                .setContentText(context.getString(R.string.notification_content))
+                .setSmallIcon(drawable.ic_favorite_border)
+                .setContentTitle(context.getString(string.notification_titel))
+                .setContentText(context.getString(string.notification_content))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .setAutoCancel(true)

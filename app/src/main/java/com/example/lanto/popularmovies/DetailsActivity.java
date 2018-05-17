@@ -1,6 +1,7 @@
 package com.example.lanto.popularmovies;
 
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.Intent;
 import android.content.Loader;
 import android.databinding.DataBindingUtil;
@@ -8,7 +9,9 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 
 import com.example.lanto.popularmovies.Data.Movie;
@@ -16,6 +19,7 @@ import com.example.lanto.popularmovies.Data.Review;
 import com.example.lanto.popularmovies.Data.Trailer;
 import com.example.lanto.popularmovies.HttpRequest.ReviewListLoader;
 import com.example.lanto.popularmovies.HttpRequest.TrailerListLoader;
+import com.example.lanto.popularmovies.SqlData.MoviesContract;
 import com.example.lanto.popularmovies.ViewAdapters.ReviewRecycleAdapter;
 import com.example.lanto.popularmovies.ViewAdapters.TrailerRecycleAdapter;
 import com.example.lanto.popularmovies.Services.SaveMovieService;
@@ -53,6 +57,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
             mBinding.detailPlot.setText(mMovie.getmPlot());
             mBinding.detailVote.setText(mMovie.getmVoteAvarage());
             mBinding.detailReleaseDatum.setText(mMovie.getmReleaseDate());
+            Log.e(LOG_TAG, mMovie.getmPosterUrl());
             Picasso.with(this)
                     .load(mMovie.getmPosterUrl())
                     .into(mBinding.detailPoster);
@@ -82,14 +87,30 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         mBinding.trailerRecycleView.setAdapter(mTrailerRecycleAdapter);
         mTrailerRecycleAdapter.setTrailerClickListener(this);
 
-        mBinding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentToSaveMovie = new Intent(DetailsActivity.this, SaveMovieService.class);
-                intentToSaveMovie.putExtra(MOVIE_INTENT_KEY, mMovie );
-                startService(intentToSaveMovie);
-            }
-        });
+        if(mMovie.getIsFavorite()== true) {
+            mBinding.fab.setImageResource(R.drawable.ic_remove_circle);
+            mBinding.fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Uri deleteUri = ContentUris.withAppendedId(MoviesContract.MOVIES_URI, mMovie.getmSqlId());
+                    getContentResolver().delete(deleteUri, null, null );
+                    Toast.makeText(DetailsActivity.this, R.string.delted_movie_toast, Toast.LENGTH_LONG).show();
+                }
+            });
+
+        } else {
+            mBinding.fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentToSaveMovie = new Intent(DetailsActivity.this, SaveMovieService.class);
+                    intentToSaveMovie.putExtra(MOVIE_INTENT_KEY, mMovie);
+                    startService(intentToSaveMovie);
+                    Toast.makeText(DetailsActivity.this, R.string.added_to_favorite_toast, Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
+
     }
 
 

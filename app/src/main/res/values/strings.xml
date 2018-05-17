@@ -26,5 +26,8 @@
     <string name="pef_list_label">Movies to load</string>
     //list preference key
     <string name="pref_list_key">movieToLoad</string>
+    <string name="add_your_favorite_movies_empty_view">Add your favorite movies</string>
+    <string name="added_to_favorite_toast">You have added this movie to Favorite list</string>
+    <string name="delted_movie_toast">You have removed this movie</string>
 
 </resources>

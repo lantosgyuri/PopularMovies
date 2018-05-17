@@ -10,7 +10,9 @@ public class Movie implements Parcelable{
     private final String mPosterUrl;
     private final String mVoteAvarage;
     private final String mPlot;
-    private String mId;
+    private final String mId;
+    private final boolean mIsFavorite;
+    private int mSqlId;
 
     //base constructor
     public Movie(String title, String releaseDate, String posterUrl, String voteAvarage, String plot, String Id) {
@@ -20,16 +22,21 @@ public class Movie implements Parcelable{
         mVoteAvarage = voteAvarage;
         mPlot = plot;
         mId = Id;
+        mIsFavorite = false;
 
     }
 
     //second constructor for the SQLite
-    public Movie(String title, String releaseDate, String posterUrl, String voteAverage, String plot){
+    public Movie(boolean isFavorite, String title, String releaseDate, String posterUrl,
+                 String voteAverage, String plot, String id, int sqlId){
+        mIsFavorite = isFavorite;
         mTitle = title;
         mReleaseDate = releaseDate;
         mPosterUrl = posterUrl;
         mVoteAvarage = voteAverage;
         mPlot = plot;
+        mId = id;
+        mSqlId = sqlId;
     }
 
     private Movie(Parcel in) {
@@ -39,6 +46,8 @@ public class Movie implements Parcelable{
         mVoteAvarage = in.readString();
         mPlot = in.readString();
         mId = in.readString();
+        mSqlId = in.readInt();
+        mIsFavorite = in.readByte() != 0;     //myIsFavorite == true if byte != 0
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -77,6 +86,8 @@ public class Movie implements Parcelable{
         dest.writeString(mVoteAvarage);
         dest.writeString(mPlot);
         dest.writeString(mId);
+        dest.writeInt(mSqlId);
+        dest.writeByte((byte) (mIsFavorite ? 1 : 0));     //if mIsFavorite == true, byte == 1
     }
 
     public String getmTitle() {
@@ -96,4 +107,8 @@ public class Movie implements Parcelable{
     }
 
     public String getmId(){return mId;}
+
+    public boolean getIsFavorite() { return mIsFavorite;}
+
+    public int getmSqlId(){ return mSqlId;}
 }

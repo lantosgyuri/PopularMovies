@@ -21,6 +21,7 @@ public class MoviesContract {
 
         public static final String TABLE_NAME = "movies";
         public static final String _ID = BaseColumns._ID;
+        public static final String COLUMN_MOVIE_ID = "movieId";
         public static final String COLUMN_TITEL = "titel";
         public static final String COLUMN_RELEASE_DATE = "releaseDate";
         public static final String COLUMN_POSTER_URL = "posterUrl";
