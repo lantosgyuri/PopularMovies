@@ -1,4 +1,4 @@
-package com.example.lanto.popularmovies.RecycleViewAdapters;
+package com.example.lanto.popularmovies.ViewAdapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

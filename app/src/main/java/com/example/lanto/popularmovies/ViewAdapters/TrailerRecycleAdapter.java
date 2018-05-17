@@ -1,4 +1,4 @@
-package com.example.lanto.popularmovies.RecycleViewAdapters;
+package com.example.lanto.popularmovies.ViewAdapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;

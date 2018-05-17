@@ -10,6 +10,8 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.preference.ListPreference;
+import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 
@@ -42,12 +44,18 @@ public class Utils {
     private static final int SYNC_INTERVAL_SECONDS = (int) TimeUnit.HOURS.toSeconds(SYNC_INTERVAL_HOURS);
     private static final int SYNC_FLEXTIME_SECONDS = SYNC_INTERVAL_SECONDS / 3;
 
-    public static String makeSearchUrl(Context context) {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        String searchTerm = sharedPref.getString(context.getString(R.string.pref_list_key), POPULAR);
-        Log.e("httpString:", baseUrl +searchTerm);
 
-        return baseUrl + searchTerm + API_KEY_PLACE + API_KEY;
+    //get saved movie category
+    public static String getPrefCategory(Context context){
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        String prefCategory = sharedPref.getString(context.getString(R.string.pref_list_key), POPULAR);
+        return prefCategory;
+    }
+
+    //make URLS
+    public static String makeSearchUrl(Context context) {
+        Log.e("httpString:", baseUrl + getPrefCategory(context));
+        return baseUrl + getPrefCategory(context) + API_KEY_PLACE + API_KEY;
     }
 
     public static String makeTrailerUrl(String id){

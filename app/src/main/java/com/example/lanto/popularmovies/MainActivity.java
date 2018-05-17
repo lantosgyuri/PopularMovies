@@ -2,16 +2,17 @@ package com.example.lanto.popularmovies;
 
 import android.app.LoaderManager;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +20,10 @@ import android.widget.TextView;
 
 import com.example.lanto.popularmovies.Data.Movie;
 import com.example.lanto.popularmovies.HttpRequest.MovieListLoader;
-import com.example.lanto.popularmovies.RecycleViewAdapters.MainRecycleAdapter;
+import com.example.lanto.popularmovies.SqlData.MoviesContract;
+import com.example.lanto.popularmovies.ViewAdapters.FavoriteMovieAdapter;
+import com.example.lanto.popularmovies.ViewAdapters.MainRecycleAdapter;
+import com.example.lanto.popularmovies.SqlData.MoviesContract.MoviesEntry;
 
 import java.util.List;
 
@@ -27,27 +31,28 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         MainRecycleAdapter.OnItemClickListener{
 
     private static final int LOADER_ID = 1;
+    private static final int CURSOR_LOADER_ID = 2;
+    public static boolean NETWORK_FLAG = false;
 
     private MainRecycleAdapter mAdapter;
     private RecyclerView recyclerView;
     private TextView emptyView;
+
+    private FavoriteMovieAdapter favoriteMovieAdapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle("Selected Movies: " + Utils.getPrefCategory(this));
 
         //set recycleView
         setRecyclerView();
 
-        /*
-        Check movie category.
-        Check is there any internet connection.
-        If yes load the data.
-        If not set empty view visible
-         */
-        checkHttpAndPreftoLoad();
+        //Check is there any internet connection.
+        checkHttp();
+        loadDataToRecycleView();
 
         //set notification
         Utils.setNotification(this);
@@ -68,9 +73,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         recyclerView.setHasFixedSize(true);
 
         mAdapter = new MainRecycleAdapter(this);
+        favoriteMovieAdapter = new FavoriteMovieAdapter(this);
         mAdapter.setOnItemClickListener(this);
-
-        recyclerView.setAdapter(mAdapter);
     }
 
 
@@ -84,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> data) {
         mAdapter.addAll(data);
         mAdapter.notifyDataSetChanged();
+        recyclerView.setAdapter(mAdapter);
 
     }
 
@@ -110,19 +115,31 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return super.onOptionsItemSelected(item);
     }
 
-    private void checkHttpAndPreftoLoad() {
+    private void checkHttp() {
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
-        if (networkInfo != null && networkInfo.isConnected()) {
+        if (networkInfo != null && networkInfo.isConnected()) NETWORK_FLAG = true;
+    }
 
-            getLoaderManager().initLoader(LOADER_ID, null, this);
-        } else {
+    private void loadDataToRecycleView(){
+        String prefCategory = Utils.getPrefCategory(this);
+
+        if (prefCategory.equals(getString(R.string.pref_value_favorite))) {
+                getLoaderManager().initLoader(CURSOR_LOADER_ID, null, cursorLoader);
+        }
+
+        else if( NETWORK_FLAG == false) {
             recyclerView.setVisibility(View.INVISIBLE);
             emptyView.setVisibility(View.VISIBLE);
         }
+
+        else {
+            getLoaderManager().initLoader(LOADER_ID, null, this);
+        }
+
     }
 
     @Override
@@ -132,5 +149,35 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         intent.putExtra(getString(R.string.intent_movie_tag), currentMovie);
         startActivity(intent);
     }
+
+    private LoaderManager.LoaderCallbacks<Cursor> cursorLoader = new LoaderManager.LoaderCallbacks<Cursor>() {
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            String[] projection = {
+                    MoviesEntry._ID,
+                    MoviesEntry.COLUMN_TITEL,
+                    MoviesEntry.COLUMN_POSTER_URL,
+                    MoviesEntry.COLUMN_RELEASE_DATE,
+                    MoviesEntry.COLUMN_VOTE_AVERAGE,
+                    MoviesEntry.COLUMN_PLOT};
+            return new CursorLoader(MainActivity.this,
+                    MoviesContract.MOVIES_URI,
+                    projection,
+                    null, null, null);
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+            Log.e("Main cursor", String.valueOf(data.getCount()));
+            favoriteMovieAdapter.addAll(data);
+            favoriteMovieAdapter.notifyDataSetChanged();
+            recyclerView.setAdapter(favoriteMovieAdapter);
+
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+        }
+    };
 
 }
