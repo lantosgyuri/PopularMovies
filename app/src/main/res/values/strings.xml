@@ -29,5 +29,6 @@
     <string name="add_your_favorite_movies_empty_view">Add your favorite movies</string>
     <string name="added_to_favorite_toast">You have added this movie to Favorite list</string>
     <string name="delted_movie_toast">You have removed this movie</string>
+    <string name="activity_main_title_header">Selected:\u0020</string>
 
 </resources>

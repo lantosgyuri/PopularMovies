@@ -30,7 +30,7 @@ public class Utils {
     //networking
     private static final String baseUrl = "http://api.themoviedb.org/3/movie/";
     private static final String API_KEY_PLACE ="?api_key=";
-    private static final String API_KEY = ;
+    private static final String API_KEY = "c1a1b7ead07ec4f90469511a62359911";
     private static final String VIDEOS = "/videos";
     private static final String REVIEWS = "/reviews";
     private static final String POPULAR = "popular";
@@ -46,20 +46,19 @@ public class Utils {
     //get saved movie category
     public static String getPrefCategory(Context context){
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        String prefCategory = sharedPref.getString(context.getString(string.pref_list_key), POPULAR);
-        return prefCategory;
+        return sharedPref.getString(context.getString(string.pref_list_key), POPULAR);
     }
 
     //set MainActivity title
     public static String setMainActivityTitle(Context context){
         String prefCategory = getPrefCategory(context);
-        String title = "";
+        String title = context.getString(string.activity_main_title_header);
         if (prefCategory.equals(context.getString(string.pref_value_favorite))) {
-            title = context.getString(string.pref_label_favorite);
+            title += context.getString(string.pref_label_favorite);
         }
         else if (prefCategory.equals(context.getString(string.pref_value_popular))) {
-            title = context.getString((string.pref_label_popular));
-        } else title = context.getString(string.pref_label_top_rated);
+            title += context.getString((string.pref_label_popular));
+        } else title += context.getString(string.pref_label_top_rated);
 
         return title;
     }

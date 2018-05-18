@@ -39,23 +39,24 @@ public class FavoriteMovieAdapter extends RecyclerView.Adapter<FavoriteMovieAdap
             titleTextView = itemView.findViewById(R.id.favorite_item_title);
             posterImageView = itemView.findViewById(R.id.favorite_item_poster);
 
-            // send the movie details form sql to main activity
+            // send the movie details form sql
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mListener != null) {
                         int position = getAdapterPosition();
+                        Log.e("Cursor position", "" +position);
 
                         if (position != RecyclerView.NO_POSITION) {
+
+                            mCursor.moveToPosition(position);
                             int sqlId = mCursor.getInt(mCursor.getColumnIndex(MoviesContract.MoviesEntry._ID));
                             String title = mCursor.getString(mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_TITEL));
                             String posterUrl = mCursor.getString(mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_POSTER_URL));
-                            Log.e("cursor movie adatok", posterUrl);
                             String plot = mCursor.getString(mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_PLOT));
                             String avarage = mCursor.getString(mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_VOTE_AVERAGE));
                             String id = mCursor.getString(mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_MOVIE_ID));
                             String releaseDate = mCursor.getString(mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_RELEASE_DATE));
-                            Log.e("cursor movie adatok", title + posterUrl + plot + avarage + id + releaseDate);
                             mListener.onItemClickCursor(title, posterUrl, plot, avarage, id, releaseDate, sqlId);
                         }
                     }
@@ -79,7 +80,7 @@ public class FavoriteMovieAdapter extends RecyclerView.Adapter<FavoriteMovieAdap
         String title = mCursor.getString(mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_TITEL));
         String posterUrl = mCursor.getString(mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_POSTER_URL));
 
-        if (MainActivity.NETWORK_FLAG == true) {
+        if (MainActivity.NETWORK_FLAG) {
             Picasso.with(mContext)
                     .load(posterUrl)
                     .into(holder.posterImageView);

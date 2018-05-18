@@ -29,8 +29,8 @@ import java.util.List;
 
 import static com.example.lanto.popularmovies.R.string.pref_value_favorite;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Movie>>,
-        MainRecycleAdapter.OnItemClickListener, FavoriteMovieAdapter.OnItemClickListenerCursor{
+public class MainActivity extends AppCompatActivity implements
+        MainRecycleAdapter.OnItemClickListener, FavoriteMovieAdapter.OnItemClickListenerCursor {
 
     private static final int LOADER_ID = 1;
     private static final int CURSOR_LOADER_ID = 2;
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
-    private void setRecyclerView(){
+    private void setRecyclerView() {
         /*
         emptyView in case if there is no internet connection
         and there is no data to load into recycleView, or cursor is empty
@@ -83,29 +83,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
-    //loader to load the Movies
-    @Override
-    public Loader<List<Movie>> onCreateLoader(int id, Bundle args) {
-        return new MovieListLoader(this, Utils.makeSearchUrl(this));
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> data) {
-        mAdapter.addAll(data);
-        mAdapter.notifyDataSetChanged();
-        recyclerView.setAdapter(mAdapter);
-
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<Movie>> loader) {
-
-    }
-
     //create menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu,menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         MenuItem item = menu.findItem(R.id.main_menu_icon);
 
         return true;
@@ -113,40 +94,40 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.main_menu_icon){
+        if (item.getItemId() == R.id.main_menu_icon) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
 
+    //check Internet connection
     private void checkHttp() {
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
+        //I need to know in more than one place is there internet or not.
         if (networkInfo != null && networkInfo.isConnected()) NETWORK_FLAG = true;
     }
 
-    private void loadDataToRecycleView(){
+    //check the pref and load the selected category
+    private void loadDataToRecycleView() {
         String prefCategory = Utils.getPrefCategory(this);
 
         if (prefCategory.equals(getString(pref_value_favorite))) {
-                getLoaderManager().initLoader(CURSOR_LOADER_ID, null, cursorLoader);
-        }
-
-        else if( NETWORK_FLAG == false) {
+            getLoaderManager().initLoader(CURSOR_LOADER_ID, null, cursorLoader);
+        } else if (!NETWORK_FLAG) {
             recyclerView.setVisibility(View.INVISIBLE);
             emptyView.setVisibility(View.VISIBLE);
-        }
-
-        else {
-            getLoaderManager().initLoader(LOADER_ID, null, this);
+        } else {
+            getLoaderManager().initLoader(LOADER_ID, null, httpLoader);
         }
 
     }
 
+    //item Click on Top Rated or Popular movies
     @Override
     public void onItemClick(int position) {
         Intent intent = new Intent(this, DetailsActivity.class);
@@ -155,17 +136,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         startActivity(intent);
     }
 
-    // make new movie object to pass to the main activity
+    // item click on Favorite movies. Make new movie object from cursor and  pass to the detail activity
     @Override
     public void onItemClickCursor(String title, String posterUrl, String plot,
                                   String avarage, String id, String releaseDate, int sqlId) {
-        Movie favoriteMovie = new Movie(true, title, releaseDate, posterUrl, avarage, plot, id, sqlId );
+        Movie favoriteMovie = new Movie(true, title, releaseDate, posterUrl, avarage, plot, id, sqlId);
 
         Intent intent = new Intent(this, DetailsActivity.class);
         intent.putExtra(getString(R.string.intent_movie_tag), favoriteMovie);
         startActivity(intent);
     }
 
+    //favorite movie cursor loader
     private final LoaderManager.LoaderCallbacks<Cursor> cursorLoader = new LoaderManager.LoaderCallbacks<Cursor>() {
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -188,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
             Log.e("Main cursor", String.valueOf(data.getCount()));
-            if(data == null){
+            if (data.getCount() == 0) {
                 recyclerView.setVisibility(View.INVISIBLE);
                 emptyViewCursor.setVisibility(View.VISIBLE);
             }
@@ -203,4 +185,26 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     };
 
+    //loader to load the top rated and popular movies
+    private final LoaderManager.LoaderCallbacks<List<Movie>> httpLoader = new LoaderManager.LoaderCallbacks<List<Movie>>() {
+        @Override
+        public Loader<List<Movie>> onCreateLoader(int id, Bundle args) {
+            // Utils.makeSearchUrl makes the url from the saved preference
+            return new MovieListLoader(MainActivity.this, Utils.makeSearchUrl(MainActivity.this));
+        }
+
+        @Override
+        public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> data) {
+            mAdapter.addAll(data);
+            mAdapter.notifyDataSetChanged();
+            recyclerView.setAdapter(mAdapter);
+
+        }
+
+        @Override
+        public void onLoaderReset(Loader<List<Movie>> loader) {
+
+        }
+
+    };
 }

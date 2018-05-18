@@ -87,7 +87,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         mBinding.trailerRecycleView.setAdapter(mTrailerRecycleAdapter);
         mTrailerRecycleAdapter.setTrailerClickListener(this);
 
-        if(mMovie.getIsFavorite()== true) {
+        if(mMovie.getIsFavorite()) {
             mBinding.fab.setImageResource(R.drawable.ic_remove_circle);
             mBinding.fab.setOnClickListener(new View.OnClickListener() {
                 @Override
