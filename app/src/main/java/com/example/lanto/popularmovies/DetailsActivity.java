@@ -73,6 +73,25 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
 
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putIntArray(getString(R.string.detail_save_instance_key),
+                new int[]{ mBinding.detailScrollView.getScrollX(), mBinding.detailScrollView.getScrollY()});
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        final int[] position = savedInstanceState.getIntArray(getString(R.string.detail_save_instance_key));
+        if(position != null)
+            mBinding.detailScrollView.post(new Runnable() {
+                public void run() {
+                    mBinding.detailScrollView.scrollTo(position[0], position[1]);
+                }
+            });
+    }
+
     private void setReviewRecycleView(){
         mBinding.reviewsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mBinding.reviewsRecyclerView.setHasFixedSize(true);
@@ -94,7 +113,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                 public void onClick(View v) {
                     Uri deleteUri = ContentUris.withAppendedId(MoviesContract.MOVIES_URI, mMovie.getmSqlId());
                     getContentResolver().delete(deleteUri, null, null );
-                    Toast.makeText(DetailsActivity.this, R.string.delted_movie_toast, Toast.LENGTH_LONG).show();
+                    Toast.makeText(DetailsActivity.this, R.string.deleted_movie_toast, Toast.LENGTH_LONG).show();
                 }
             });
 

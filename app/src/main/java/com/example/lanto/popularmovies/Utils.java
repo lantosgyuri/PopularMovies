@@ -30,7 +30,7 @@ public class Utils {
     //networking
     private static final String baseUrl = "http://api.themoviedb.org/3/movie/";
     private static final String API_KEY_PLACE ="?api_key=";
-    private static final String API_KEY = "c1a1b7ead07ec4f90469511a62359911";
+    private static final String API_KEY = "";
     private static final String VIDEOS = "/videos";
     private static final String REVIEWS = "/reviews";
     private static final String POPULAR = "popular";
@@ -101,7 +101,7 @@ public class Utils {
 
         Notification notification = new NotificationCompat.Builder(context, CHANNEL_1_ID)
                 .setSmallIcon(drawable.ic_favorite_border)
-                .setContentTitle(context.getString(string.notification_titel))
+                .setContentTitle(context.getString(string.notification_title))
                 .setContentText(context.getString(string.notification_content))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)

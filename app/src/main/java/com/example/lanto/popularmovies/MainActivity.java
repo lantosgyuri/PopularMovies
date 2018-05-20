@@ -187,6 +187,7 @@ public class MainActivity extends AppCompatActivity implements
 
     //loader to load the top rated and popular movies
     private final LoaderManager.LoaderCallbacks<List<Movie>> httpLoader = new LoaderManager.LoaderCallbacks<List<Movie>>() {
+
         @Override
         public Loader<List<Movie>> onCreateLoader(int id, Bundle args) {
             // Utils.makeSearchUrl makes the url from the saved preference
@@ -205,6 +206,7 @@ public class MainActivity extends AppCompatActivity implements
         public void onLoaderReset(Loader<List<Movie>> loader) {
 
         }
+
 
     };
 }

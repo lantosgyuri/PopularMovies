@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:visibility="invisible"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-        android:text="@string/no_internet_connection_warning"/>
+        android:text="@string/main_activity_empty_view"/>
 
     <TextView
         android:layout_gravity="center"
